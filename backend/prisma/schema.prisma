@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // prisma-ignore
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  apiKey    String   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+  notifications Notification[]
+  templates  Template[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  tenantId  String
+  email     String  
+  name      String
+  role      String   // owner, admin, member
+  hashedPassword  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, email])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  tenantId    String
+  channel        String   // email, sms, push, inapp
+  status      String   // pending, sent, failed
+  templateId  String?
+  recipient   String?   // email OR phone OR pushToken OR userId
+  renderedSubject String?
+  renderedContent String?
+
+  payload     Json?
+  createdAt   DateTime @default(now())
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  template Template? @relation(fields: [templateId], references: [id])
+}
+
+model Template {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  channel   String   // email, sms, push, inapp
+  subject   String?  // only for email
+  content   String   // text or HTML
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  versions      TemplateVersion[]
+  notifications Notification[]
+}
+
+model TemplateVersion {
+  id         String   @id @default(uuid())
+  templateId String
+  version    Int
+  channel    String 
+  subject    String?
+  content    String
+  createdAt  DateTime @default(now())
+
+  template   Template @relation(fields: [templateId], references: [id])
+}
+
+

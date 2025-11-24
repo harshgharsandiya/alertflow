@@ -1,0 +1,58 @@
+# -------------------------
+# Node modules (ignore everywhere)
+# -------------------------
+node_modules/
+
+# -------------------------
+# Environment files (ignore everywhere)
+# -------------------------
+.env
+*.env
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -------------------------
+# Build outputs (ignore everywhere)
+# -------------------------
+dist/
+build/
+.next/
+out/
+coverage/
+
+
+# -------------------------
+# Cache files (ignore recursively)
+# -------------------------
+.cache/
+.eslintcache
+.parcel-cache/
+
+# -------------------------
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# IDE files
+# -------------------------
+.vscode/
+.idea/
+
+# -------------------------
+# TypeScript
+# -------------------------
+*.tsbuildinfo
+
+# -------------------------
+# Docker data
+# -------------------------
+docker-data/
